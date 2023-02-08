@@ -1,3 +1,3 @@
 # SwiftAstro
 
-A description of this package.
+A Swift package for astronomy.
