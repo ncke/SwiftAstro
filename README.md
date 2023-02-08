@@ -28,7 +28,7 @@ The planets are enumerated by the `Planet` enum. The `heliocentricPosition` func
 
 *Example:* calculate the position of Mars given `jd` (a `JulianDay`) as declared above.
 
-`let posn = SwiftAstro.Planet.mars.heliocentricPosition(t: jd)`
+`let posn = Planet.mars.heliocentricPosition(t: jd)`
 
 Gives longitude 6.273538987210828 rads, latitude 6.2584073248151375 rads, and radius 1.3912076937159727 au (the distance to the Sun).
 
