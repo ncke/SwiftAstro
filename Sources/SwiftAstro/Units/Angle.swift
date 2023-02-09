@@ -40,6 +40,10 @@ extension SwiftAstro.Angle {
         radians = (degrees * Self.twopi) / 360.0
     }
     
+    public init(arcSeconds: Double) {
+        self.init(degrees: arcSeconds / 3600.0)
+    }
+    
 }
 
 // MARK: - Unwinding
@@ -153,7 +157,7 @@ extension SwiftAstro.Angle {
             let s = Utility.fractionNumberFormatter.string(
                 from: seconds as NSNumber)!
             
-            return "\(d)° \(m)' \(s)''"
+            return "\(d)° \(m)' \(s)\""
         }
         
         var asRadians: Double {

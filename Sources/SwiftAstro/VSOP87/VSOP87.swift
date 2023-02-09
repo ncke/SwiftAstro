@@ -96,15 +96,7 @@ struct VSOP87 {
     private let tables: [Table]
     
     init(resource: String, withExtension ext: String) {
-        let resourceUrl = Bundle.module.url(
-            forResource: resource,
-            withExtension: ext)!
-        let data = try! Data(contentsOf: resourceUrl)
-        let dataString = String(data: data, encoding: .utf8)!
-        let lines = dataString.components(separatedBy: .newlines).filter {
-            line in !line.isEmpty
-        }
-        
+        let lines = try! Utility.stringsForResource(resource, withExtension: ext)
         var tables = [Table]()
         var header: Header?
         var terms = [Term]()
@@ -118,7 +110,7 @@ struct VSOP87 {
         }
         
         for (nth, line) in lines.enumerated() {
-            let preamble: String = line.cols(2, 4)
+            let preamble: String = line.cols(2, 4)!
             
             if (preamble == "VSOP") {
                 tableComplete()
@@ -144,33 +136,33 @@ extension VSOP87 {
     
     private static func processHeader(_ line: String) -> Header {
         return Header(
-            iv: line.cols(18, 1),
-            bo: line.cols(23, 7),
-            ic: line.cols(42, 1),
-            it: line.cols(60, 1),
-            in: line.cols(61, 7))
+            iv: line.cols(18, 1)!,
+            bo: line.cols(23, 7)!,
+            ic: line.cols(42, 1)!,
+            it: line.cols(60, 1)!,
+            in: line.cols(61, 7)!)
     }
     
     private static func processTerm(_ line: String) -> Term {
         var aArray: [Int] = []
         for aIndex in 0..<11 {
             let aColumn = 11 + (aIndex * 3)
-            let aValue = line.cols(aColumn, 3) as Int
+            let aValue = line.cols(aColumn, 3)! as Int
             aArray.append(aValue)
         }
         
         return Term(
-            iv: line.cols(2, 1),
-            ib: line.cols(3,1),
-            ic: line.cols(4, 1),
-            it: line.cols(5, 1),
-            n: line.cols(6, 5),
+            iv: line.cols(2, 1)!,
+            ib: line.cols(3,1)!,
+            ic: line.cols(4, 1)!,
+            it: line.cols(5, 1)!,
+            n: line.cols(6, 5)!,
             a: aArray,
-            S: line.cols(47, 15),
-            K: line.cols(62, 18),
-            A: line.cols(80, 18),
-            B: line.cols(98, 14),
-            C: line.cols(112, 20))
+            S: line.cols(47, 15)!,
+            K: line.cols(62, 18)!,
+            A: line.cols(80, 18)!,
+            B: line.cols(98, 14)!,
+            C: line.cols(112, 20)!)
     }
     
 }
@@ -204,44 +196,6 @@ extension VSOP87 {
         }
         
         return sumTerms
-    }
-    
-}
-
-fileprivate extension String {
-    
-    private func excerpt(_ n: Int, _ len: Int) -> Substring {
-        let start = self.index(self.startIndex, offsetBy: n)
-        let finish = self.index(self.startIndex, offsetBy: n + len)
-        let excerpt = self[start..<finish]
-        return excerpt
-    }
-    
-    func cols(_ n: Int, _ len: Int) -> String {
-        let substr = excerpt(n-1, len)
-        let str = len > 1
-            ? substr.trimmingCharacters(in: .whitespaces)
-            : String(substr)
-        
-        return str
-    }
-    
-    func cols(_ n: Int, _ len: Int) -> Int {
-        let substr = excerpt(n-1, len)
-        let str = len > 1
-            ? substr.trimmingCharacters(in: .whitespaces)
-            : String(substr)
-
-        return Int(str)!
-    }
-    
-    func cols(_ n: Int, _ len: Int) -> Double {
-        let substr = excerpt(n-1, len)
-        let str = len > 1
-            ? substr.trimmingCharacters(in: .whitespaces)
-            : String(substr)
-
-        return Double(str)!
     }
     
 }
