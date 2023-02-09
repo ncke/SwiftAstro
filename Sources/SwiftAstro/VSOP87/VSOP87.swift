@@ -11,11 +11,11 @@ class VSOP87Store {
     
     static let shared = VSOP87Store()
     
-    private var vsops = [Planet: VSOP87]()
+    private var vsops = [SwiftAstro.Planet: VSOP87]()
     
     private let mutex = NSLock()
     
-    func vsop87(for planet: Planet) -> VSOP87 {
+    func vsop87(for planet: SwiftAstro.Planet) -> VSOP87 {
         mutex.lock()
         defer { mutex.unlock() }
         
@@ -29,7 +29,7 @@ class VSOP87Store {
         return loaded
     }
     
-    private func loadVsop(for planet: Planet) -> VSOP87 {
+    private func loadVsop(for planet: SwiftAstro.Planet) -> VSOP87 {
         switch planet {
         case .mercury: return VSOP87(resource: "VSOP87B", withExtension: "mer")
         case .venus: return VSOP87(resource: "VSOP87B", withExtension: "ven")
@@ -177,13 +177,13 @@ extension VSOP87 {
 
 extension VSOP87 {
     
-    func computeSum(_ t: JulianDay, index: Index) -> Double {
+    func computeSum(_ tau: Double, index: Index) -> Double {
         let sums = tables(forIndex: index).map { table in
-            computeSumTerms(table.terms, t: t)
+            computeSumTerms(table.terms, tau: tau)
         }
         
         let sum = (0..<sums.count).reduce(0.0) { partial, i in
-            partial + sums[i] * pow(t.tau2000, Double(i))
+            partial + sums[i] * pow(tau, Double(i))
         }
         
         return sum
@@ -195,9 +195,12 @@ extension VSOP87 {
         }
     }
     
-    private func computeSumTerms(_ terms: [Term], t: JulianDay) -> Double {
+    private func computeSumTerms(
+        _ terms: [Term],
+        tau: Double
+    ) -> Double {
         let sumTerms: Double = terms.reduce(0.0) { partial, term in
-            partial + term.A * cos(term.B + term.C * t.tau2000)
+            partial + term.A * cos(term.B + term.C * tau)
         }
         
         return sumTerms

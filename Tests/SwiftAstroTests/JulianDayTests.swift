@@ -36,44 +36,57 @@ final class JulianDayTests: XCTestCase {
         
         // Example dates from Meeus, p. 62.
         
-        XCTAssertEqual(JulianDay.zero.value, 0)
-        
         let date0a = date(-4712, 1, 1, 12, 0, 0)
-        XCTAssertEqual(JulianDay(date: date0a).value, 0)
+        XCTAssertEqual(SwiftAstro.Time(date: date0a).julianDays, 0.0)
         
         let date1 = date(2000, 1, 1, 12, 0, 0)
-        XCTAssertEqual(JulianDay(date: date1).value, 2451545.0)
+        XCTAssertEqual(SwiftAstro.Time(date: date1).julianDays, 2451545.0)
         
-        let date2 = date(1987, 1, 27, 0, 0, 0)
-        XCTAssertEqual(JulianDay(date: date2).value, 2446822.5)
+        let date2 = date(1988, 6, 19, 12, 0, 0)
+        XCTAssertEqual(SwiftAstro.Time(date: date2).julianDays, 2447332.0)
         
-        let date3 = date(1988, 6, 19, 12, 0, 0)
-        XCTAssertEqual(JulianDay(date: date3).value, 2447332.0)
+        let interval1 = date(1987, 1, 27, 0, 0, 0).timeIntervalSinceReferenceDate
+        XCTAssertEqual(SwiftAstro.Time(timeIntervalSinceReferenceDate: interval1).julianDays, 2446822.5)
+
+        let interval2 = date(1600, 12, 31, 0, 0, 0).timeIntervalSinceReferenceDate
+        XCTAssertEqual(SwiftAstro.Time(timeIntervalSinceReferenceDate: interval2).julianDays, 2305812.5)
         
-        let date4 = date(1600, 12, 31, 0, 0, 0)
-        XCTAssertEqual(JulianDay(date: date4).value, 2305812.5)
-        
-        let date5 = date(-1000, 2, 29, 0, 0, 0)
-        XCTAssertEqual(JulianDay(date: date5).value, 1355866.5)
+        let interval3 = date(-1000, 2, 29, 0, 0, 0).timeIntervalSinceReferenceDate
+        XCTAssertEqual(SwiftAstro.Time(timeIntervalSinceReferenceDate: interval3).julianDays, 1355866.5)
     }
     
     func testDate() throws {
         
         // Example dates from Meeus, p. 62.
         
-        let jd1 = JulianDay(2415020.5)
-        XCTAssertEqual(jd1.date(), date(1900, 1, 1, 0, 0, 0))
+        let jd1 = SwiftAstro.Time(julianDays: 2415020.5)
+        XCTAssertEqual(jd1.date, date(1900, 1, 1, 0, 0, 0))
         
-        let jd2 = JulianDay(2026871.8)
-        XCTAssertEqual(jd2.date(), date(837, 4, 10, 7, 12, 0))
+        let jd2 = SwiftAstro.Time(julianDays: 2026871.8)
+        XCTAssertEqual(jd2.date, date(837, 4, 10, 7, 12, 0))
     }
     
-    func testTau2000() throws {
+    func testInterval() throws {
+        
+        XCTAssertEqual(SwiftAstro.Time(julianDays: 2451545.0).timeIntervalSinceReferenceDate, -31579200.0)
+        
+        XCTAssertEqual(SwiftAstro.Time(julianDays: 2447332.0).timeIntervalSinceReferenceDate, -395582400.0)
+        
+        XCTAssertEqual(SwiftAstro.Time(julianDays: 0.0).timeIntervalSinceReferenceDate, -211845067200.0)
+    }
+    
+    func testEpoch() {
+        
+        XCTAssertEqual(SwiftAstro.Time.Epoch.J2000.time, SwiftAstro.Time(julianDays: 2451545.0))
+        
+    }
+    
+    func testJulianMilleniaSinceEpoch() throws {
         
         // Example from Meeus, p. 207.
         
-        let jd1 = JulianDay(2448976.5)
-        XCTAssertEqual(jd1.tau2000.to(dp: 12), -0.007032169747)
+        let jd1 = SwiftAstro.Time(julianDays: 2448976.5)
+        XCTAssertEqual(jd1.julianMilleniaSinceEpoch(.J2000).to(dp: 12), -0.007032169747)
     }
     
 }
