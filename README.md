@@ -68,9 +68,9 @@ The `SwiftAstro.Angle` data structure represents an angular measurement. The und
 **Example:** Find the right ascension and declination of Sirius, star number 2491 in the Yale Bright Star Catalog.
 
 ```Swift
-if  let sirius = SwiftAstro.brightStarCatalog[2491],
-  let ra = sirius.rightAscension?.rightAscension,
-  let dec = sirius.declination?.degreesMinutesSeconds
+if let sirius = SwiftAstro.brightStarCatalog[2491],
+   let ra = sirius.rightAscension?.rightAscension,
+   let dec = sirius.declination?.degreesMinutesSeconds
 {
   print (ra)               // 06h 45m 08.900s
   print (dec)              // -016° 42' 58.000"
