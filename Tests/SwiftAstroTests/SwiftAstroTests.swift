@@ -5,12 +5,6 @@ final class SwiftAstroTests: XCTestCase {
     
     func testHeliocentricPosition() {
 
-        
-        let catalog = SwiftAstro.BrightStarCatalog.catalog
-        
-        let star1 = catalog[2491]
-        
-        
         // Examples provided by VSOP87.
         
         // VSOP87B Venus at 1899-12-31T12:00:00Z.

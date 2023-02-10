@@ -7,21 +7,21 @@
 
 import Foundation
 
+// MARK: - Bright Star Catalog
+
 extension SwiftAstro {
     
     public struct BrightStarCatalog {
         
-        public static let catalog = SwiftAstro.BrightStarCatalog()
-        
-        public let stars: [SwiftAstro.Star]
-        let notes: [Int: [SwiftAstro.Star.Note]]
+        public let stars: [SwiftAstro.BrightStar]
+        let notes: [Int: [SwiftAstro.BrightStar.Note]]
         
         init() {
             stars = Self.parseStarCatalog()
             notes = Self.parseStarNotes()
         }
         
-        public subscript(number: Int) -> SwiftAstro.Star? {
+        public subscript(number: Int) -> SwiftAstro.BrightStar? {
             let idx = number - 1
             guard idx >= 0, idx < stars.count else {
                 return nil
@@ -30,7 +30,7 @@ extension SwiftAstro {
             return stars[idx]
         }
         
-        public func notes(number: Int) -> [SwiftAstro.Star.Note]? {
+        public func notes(number: Int) -> [SwiftAstro.BrightStar.Note]? {
             notes[number]
         }
         
@@ -38,15 +38,17 @@ extension SwiftAstro {
     
 }
 
+// MARK: - Parse Stars
+
 private extension SwiftAstro.BrightStarCatalog {
     
-    static func parseStarCatalog() -> [SwiftAstro.Star] {
+    static func parseStarCatalog() -> [SwiftAstro.BrightStar] {
         let lines = try! Utility.stringsForResource(
             "yale-bright-star-catalog",
             withExtension: "txt"
         )
         
-        var catalog = [SwiftAstro.Star]()
+        var catalog = [SwiftAstro.BrightStar]()
         
         for line in lines {
             
@@ -67,7 +69,7 @@ private extension SwiftAstro.BrightStarCatalog {
                 componentsSeparation = nil
             }
             
-            let star = SwiftAstro.Star(
+            let star = SwiftAstro.BrightStar(
                 number: line.cols(1, 4)!,
                 name: line.cols(5, 10),
                 durchmusterungIdentification: line.cols(15, 11),
@@ -103,8 +105,8 @@ private extension SwiftAstro.BrightStarCatalog {
                 trigonometricParallax: parallax,
                 catHeliocentricRadialVelocity: line.cols(167, 4),
                 catHeliocentricRadialVelocityComments: line.cols(171, 4),
-                rotationalVelocityLimitCharacters: line.cols(175, 2),
-                rotationalVelocity: line.cols(177, 3),
+                catRotationalVelocityLimitCharacters: line.cols(175, 2),
+                catRotationalVelocity: line.cols(177, 3),
                 isRotationalVelocityUncertain: line.cols(180, 1) == "?" ? true : false,
                 magnitudeDifference: line.cols(181, 4),
                 componentsSeparation: componentsSeparation,
@@ -119,7 +121,10 @@ private extension SwiftAstro.BrightStarCatalog {
         return catalog
     }
     
-    static func parseRightAscension(_ line: String, offset: Int) -> SwiftAstro.Angle? {
+    static func parseRightAscension(
+        _ line: String,
+        offset: Int
+    ) -> SwiftAstro.Angle? {
         guard
             let rah: Int = line.cols(offset, 2),
             let ram: Int = line.cols(offset + 2, 2),
@@ -131,7 +136,10 @@ private extension SwiftAstro.BrightStarCatalog {
         return SwiftAstro.Angle(hours: rah, minutes: ram, seconds: ras)
     }
     
-    static func parseDeclination(_ line: String, offset: Int) -> SwiftAstro.Angle? {
+    static func parseDeclination(
+        _ line: String,
+        offset: Int
+    ) -> SwiftAstro.Angle? {
         guard
             let sgn: String = line.cols(offset, 1),
             var ded: Int = line.cols(offset + 1, 2),
@@ -148,7 +156,9 @@ private extension SwiftAstro.BrightStarCatalog {
         return SwiftAstro.Angle(degrees: ded, minutes: dem, seconds: des)
     }
     
-    static func parseGalactics(_ line: String) -> (SwiftAstro.Angle?, SwiftAstro.Angle?) {
+    static func parseGalactics(
+        _ line: String
+    ) -> (SwiftAstro.Angle?, SwiftAstro.Angle?) {
         guard
             let glon: Double = line.cols(91, 6),
             let glat: Double = line.cols(97, 6)
@@ -156,10 +166,14 @@ private extension SwiftAstro.BrightStarCatalog {
             return (nil, nil)
         }
         
-        return (SwiftAstro.Angle(degrees: glon), SwiftAstro.Angle(degrees: glat))
+        return (
+            SwiftAstro.Angle(degrees: glon),
+            SwiftAstro.Angle(degrees: glat))
     }
     
-    static func parseAnnualMotion(_ line: String) -> (SwiftAstro.Angle?, SwiftAstro.Angle?) {
+    static func parseAnnualMotion(
+        _ line: String
+    ) -> (SwiftAstro.Angle?, SwiftAstro.Angle?) {
         guard
             let ra: Double = line.cols(149, 6),
             let dec: Double = line.cols(155, 6)
@@ -167,24 +181,28 @@ private extension SwiftAstro.BrightStarCatalog {
             return (nil, nil)
         }
         
-        return (SwiftAstro.Angle(arcSeconds: ra), SwiftAstro.Angle(arcSeconds: dec))
+        return (
+            SwiftAstro.Angle(arcSeconds: ra),
+            SwiftAstro.Angle(arcSeconds: dec))
     }
     
     
 }
 
+// MARK: - Parse Notes
+
 extension SwiftAstro.BrightStarCatalog {
     
-    static func parseStarNotes() -> [Int: [SwiftAstro.Star.Note]] {
+    static func parseStarNotes() -> [Int: [SwiftAstro.BrightStar.Note]] {
         let lines = try! Utility.stringsForResource(
             "yale-bright-star-notes",
             withExtension: "txt"
         )
         
-        var notes = [SwiftAstro.Star.Note]()
+        var notes = [SwiftAstro.BrightStar.Note]()
         
         for line in lines {
-            let note = SwiftAstro.Star.Note(
+            let note = SwiftAstro.BrightStar.Note(
                 number: line.cols(2, 4)!,
                 counter: line.cols(6, 2)!,
                 category: line.cols(8, 4)!,
@@ -193,7 +211,7 @@ extension SwiftAstro.BrightStarCatalog {
             notes.append(note)
         }
         
-        return [Int: [SwiftAstro.Star.Note]](grouping: notes) { note in
+        return [Int: [SwiftAstro.BrightStar.Note]](grouping: notes) { note in
             return note.number
         }
     }

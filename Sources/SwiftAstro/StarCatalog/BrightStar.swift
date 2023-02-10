@@ -1,5 +1,5 @@
 //
-//  Star.swift
+//  BrightStar.swift
 //  
 //
 //  Created by Nick on 09/02/2023.
@@ -7,15 +7,13 @@
 
 import Foundation
 
-// MARK: - Star
+// MARK: - Bright Star
 
 extension SwiftAstro {
     
-    public enum Constellation {
-        case canisMajor
-    }
-    
-    public struct Star {
+    public struct BrightStar {
+        
+        // MARK: - Catalog Numbers
         
         /// Harvard Revised Star Number (Bright Star Number).
         public let number: Int
@@ -34,6 +32,8 @@ extension SwiftAstro {
         
         /// FK5 Star Number.
         public let fk5StarNumber: Int?
+        
+        // MARK: - Infrared
         
         let irFlag: Bool
         
@@ -68,6 +68,8 @@ extension SwiftAstro {
         }
         
         let irFlagReference: String?
+        
+        // MARK: - Multiple Stars
         
         public enum MultipleStarCode {
             
@@ -109,6 +111,8 @@ extension SwiftAstro {
         
         public var isMultipleStar: Bool {
             multipleCode != nil
+            || magnitudeDifference != nil
+            || componentsCount != nil
         }
         
         let multipleCode: String?
@@ -122,11 +126,15 @@ extension SwiftAstro {
         /// Variable star identification.
         public let variableStarIdentification: String?
         
+        // MARK: - 1900 Ephemeris
+        
         /// Right ascension, equinox B1900, epoch 1900.0.
         public let rightAscension1900: SwiftAstro.Angle?
         
         /// Declination, equinox B1900, epoch 1900.0.
         public let declination1900: SwiftAstro.Angle?
+        
+        // MARK: - 2000 Ephemeris
         
         /// Right ascension, equinox B2000, epoch 2000.0.
         public let rightAscension: SwiftAstro.Angle?
@@ -134,11 +142,15 @@ extension SwiftAstro {
         /// Declination, equinox B2000, epoch 2000.0.
         public let declination: SwiftAstro.Angle?
         
+        // MARK: - Galactic Lat Long
+        
         /// Galactic longitude.
         public let galacticLongitude: SwiftAstro.Angle?
         
         /// Galactic latitude.
         public let galacticLatitude: SwiftAstro.Angle?
+        
+        // MARK: - Visual Magnitude
         
         /// Visual magnitude.
         public let visualMagnitude: Double?
@@ -169,25 +181,91 @@ extension SwiftAstro {
         /// Is the visual magnitude uncertain.
         public let isVisualMagnitudeUncertain: Bool
         
-        /// The purported visual magnitude limit for naked eye visibility.
-        public static let magnitudeLimitForNakedEyeVisibility = 6.5
+        // MARK: - UBV Color
         
-        /// True if the star is visible to the naked eye, false otherwise.
-        public var isVisibleToNakedEye: Bool {
-            guard let mag = visualMagnitude else { return false }
-            return mag < Self.magnitudeLimitForNakedEyeVisibility
+        public struct UBVColor {
+            public let bv: Double?
+            public let ub: Double?
+            public let isBvUncertain: Bool
+            public let isUbUncertain: Bool
+            public let isUncertain: Bool
+        }
+        
+        public var ubvColor: UBVColor? {
+            guard bvColor != nil || ubColor != nil else { return nil }
+            
+            return UBVColor(
+                bv: bvColor,
+                ub: ubColor,
+                isBvUncertain: isBvColorUncertain,
+                isUbUncertain: isUbColorUncertain,
+                isUncertain: isBvColorUncertain || isUbColorUncertain)
         }
         
         let bvColor: Double?
         let isBvColorUncertain: Bool
         let ubColor: Double?
         let isUbColorUncertain: Bool
+        
+        // MARK: - RI Color
+        
+        public struct RIColor {
+            public let ri: Double
+            
+            public enum System {
+                case cousin
+                case eggen
+                case unknown
+            }
+            
+            public let system: System
+        }
+        
+        public var riColor: RIColor? {
+            guard let ri = riInSystem else { return nil }
+            
+            var system = RIColor.System.unknown
+            if let code = riSystemCode {
+                if code.containsCharacter("C") {
+                    system = .cousin
+                } else if code.containsCharacter("E") {
+                    system = .eggen
+                }
+            }
+            
+            return RIColor(ri: ri, system: system)
+        }
+        
         let riInSystem: Double?
         let riSystemCode: String?
+        
+        // MARK: - Spectral Type
+        
         let spectralType: String?
         let spectralTypeCode: String?
+        
+        // MARK: - Annual Motion
+        
+        public struct AnnualMotion {
+            public let rightAscension: SwiftAstro.Angle
+            public let declination: SwiftAstro.Angle
+        }
+        
+        public var annualMotion: AnnualMotion? {
+            guard
+                let ra = raAnnualMotion,
+                let dec = decAnnualMotion
+            else {
+                return nil
+            }
+            
+            return AnnualMotion(rightAscension: ra, declination: dec)
+        }
+        
         let raAnnualMotion: SwiftAstro.Angle?
         let decAnnualMotion: SwiftAstro.Angle?
+        
+        // MARK: - Parallax
         
         public enum Parallax {
             
@@ -210,6 +288,8 @@ extension SwiftAstro {
         let isTrigonometricParallax: Bool
         let trigonometricParallax: SwiftAstro.Angle?
         
+        // MARK: - Heliocentric Radial Velocity
+        
         public struct HeliocentricRadialVelocity {
             
             /// Heliocentric radial velocity km/s.
@@ -227,11 +307,13 @@ extension SwiftAstro {
                 return comments.containsCharacter("?")
             }
             
+            /// True if flagged as a spectroscopic binary, false otherwise.
             public var isSpectroscopicBinary: Bool {
                 guard let comments = comments else { return false }
                 return comments.containsCharacter("S")
             }
             
+            /// Number of spectra lines for spectroscopic binary, if known.
             public var spectraLines: Int? {
                 guard let comments = comments else { return nil }
                 
@@ -247,7 +329,7 @@ extension SwiftAstro {
             }
             
             let comments: String?
-        
+            
         }
         
         public var heliocentricRadialVelocity: HeliocentricRadialVelocity? {
@@ -264,39 +346,124 @@ extension SwiftAstro {
         let catHeliocentricRadialVelocity: Int?
         let catHeliocentricRadialVelocityComments: String?
         
-        let rotationalVelocityLimitCharacters: String?
-        let rotationalVelocity: Int?
+        // MARK: - Rotational Velocity
+        
+        public struct RotationalVelocity {
+            
+            /// Rotational velocity, v sin i (km/s).
+            public let velocity: Int
+            
+            /// Uncertainty or variability of rotational velocity.
+            public let isUncertain: Bool
+            
+            /// Rotational velocity limit characters.
+            public let limitCharacters: String?
+        }
+        
+        public var rotationalVelocity: RotationalVelocity? {
+            guard let velocity = catRotationalVelocity else {
+                return nil
+            }
+            
+            return RotationalVelocity(
+                velocity: velocity,
+                isUncertain: isRotationalVelocityUncertain,
+                limitCharacters: catRotationalVelocityLimitCharacters)
+        }
+        
+        let catRotationalVelocityLimitCharacters: String?
+        let catRotationalVelocity: Int?
         let isRotationalVelocityUncertain: Bool
-        let magnitudeDifference: Double?
-        let componentsSeparation: SwiftAstro.Angle?
-        let componentsIdentificiation: String?
-        let componentsCount: Int?
-        let hasNote: Bool
         
-        var notes: [Note]? {
-            SwiftAstro.BrightStarCatalog.catalog.notes(number: number)
+        // MARK: - Multiple Star Magnitudes
+        
+        /// Magnitude difference of double or brightest multiple.
+        public let magnitudeDifference: Double?
+        
+        /// Separation of components in Dmag if occultation binary.
+        public let componentsSeparation: SwiftAstro.Angle?
+        
+        /// Identification of components in DMag.
+        public let componentsIdentificiation: String?
+        
+        /// Number of components assigned to a multiple.
+        public let componentsCount: Int?
+        
+        // MARK: - Notes
+        
+        /// True if there are accompanying notes, false otherwise.
+        public let hasNote: Bool
+        
+        /// Accompanying notes.
+        public var notes: [Note]? {
+            SwiftAstro.brightStarCatalog.notes(number: number)
         }
         
-        public struct Note {
-            let number: Int
-            let counter: Int
-            let category: String
-            let remark: String?
-        }
     }
-    
-    
-    
 }
 
-// MARK: - Bright Stars
+// MARK: - Note
 
-extension SwiftAstro.Star {
+extension SwiftAstro.BrightStar {
     
-    public static var brightStars: [SwiftAstro.Star] = [
+    public struct Note {
         
-
+        /// Harvard Revised Star Number.
+        public let number: Int
         
-    ]
+        /// Index number for note.
+        public let counter: Int
+        
+        public enum NoteCategory {
+            case colors
+            case doubleAndMultipleStars
+            case dynamicalParallaxes
+            case groupMembership
+            case miscellaneous
+            case starNames
+            case polarization
+            case stellarRadiiOrDiameters
+            case radialOrRotationalVelocities
+            case spectra
+            case spectroscopicBinaries
+            case variability
+            case unknown
+        }
+        
+        public var noteCategory: NoteCategory {
+            if category.containsCharacter("C") {
+                return .colors
+            } else if category.containsCharacter("Y") {
+                return .dynamicalParallaxes
+            } else if category.containsCharacter("D") {
+                return .doubleAndMultipleStars
+            } else if category.containsCharacter("G") {
+                return .groupMembership
+            } else if category.containsCharacter("M") {
+                return .miscellaneous
+            } else if category.containsCharacter("N") {
+                return .starNames
+            } else if category.containsCharacter("P") {
+                return .polarization
+            } else if category.containsCharacter("A") {
+                return .variability
+            } else if category.containsCharacter("V") {
+                return .radialOrRotationalVelocities
+            } else if category.containsCharacter("R") {
+                return .stellarRadiiOrDiameters
+            } else if category.containsCharacter("B") {
+                return .spectroscopicBinaries
+            } else if category.containsCharacter("S") {
+                return .spectra
+            }
+            
+            return .unknown
+        }
+        
+        let category: String
+        
+        /// Remark.
+        public let remark: String?
+    }
     
 }
