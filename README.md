@@ -38,7 +38,7 @@ let brightest = SwiftAstro.brightStarCatalog.stars.filter {
 ## Astronomical calculations.
 
 ### Heliocentric position of the planets.
-The planets are enumerated by the `Planet` enum. The `heliocentricPosition` func returns the heliocentric position of a planet for a given Julian day. The VSOP87B tables are used, so the result is given in spherical coordinates.
+The planets are enumerated by the `Planet` enum. The `heliocentricPosition` function returns the heliocentric position of a planet for a given Julian day. The algorithm sums terms from the VSOP87B theory, the result is given in spherical coordinates.
 
 **Example:** Calculate the position of Mars on Julian Day 2460156.0 (noon on 30th July 2023).
 
