@@ -87,6 +87,45 @@ final class JulianDayTests: XCTestCase {
         
         let jd1 = SwiftAstro.Time(julianDays: 2448976.5)
         XCTAssertEqual(jd1.julianMilleniaSinceEpoch(.J2000).to(dp: 12), -0.007032169747)
+        
+        
+        let d = date(2023, 7, 30, 12, 0, 0)
+        
+        let t = SwiftAstro.Time(julianDays: 2460156.0)
+        
+        let posn = SwiftAstro.Planet.mars.heliocentricPosition(t: t)
+        
+        print(posn)
+        
+        let distance = SwiftAstro.Distance(lightYears: 1.0)
+        
+        let au = distance.astronomicalUnits
+        
+        let pc = distance.parsecs
+        
+        if  let sirius = SwiftAstro.brightStarCatalog[2491],
+            let ra = sirius.rightAscension?.rightAscension,
+            let dec = sirius.declination?.degreesMinutesSeconds
+        {
+            print (ra)
+            print (dec)
+        }
+        
+        if let vega = SwiftAstro.brightStarCatalog[7001] {
+            print(vega.visualMagnitude)
+        }
+        
+        let brightest = SwiftAstro.brightStarCatalog.stars.filter {
+            star in
+            
+            guard let magnitude = star.visualMagnitude else {
+                return false
+            }
+            
+            return magnitude <= 1.0
+        }
+        
+        
     }
     
 }

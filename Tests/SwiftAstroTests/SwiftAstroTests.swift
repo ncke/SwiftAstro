@@ -4,7 +4,7 @@ import XCTest
 final class SwiftAstroTests: XCTestCase {
     
     func testHeliocentricPosition() {
-
+        
         // Examples provided by VSOP87.
         
         // VSOP87B Venus at 1899-12-31T12:00:00Z.
