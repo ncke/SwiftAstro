@@ -1,10 +1,3 @@
-//
-//  JulianDayTests.swift
-//  
-//
-//  Created by Nick on 07/02/2023.
-//
-
 import XCTest
 @testable import SwiftAstro
 
@@ -46,13 +39,22 @@ final class JulianDayTests: XCTestCase {
         XCTAssertEqual(SwiftAstro.Time(date: date2).julianDays, 2447332.0)
         
         let interval1 = date(1987, 1, 27, 0, 0, 0).timeIntervalSinceReferenceDate
-        XCTAssertEqual(SwiftAstro.Time(timeIntervalSinceReferenceDate: interval1).julianDays, 2446822.5)
+        XCTAssertEqual(
+            SwiftAstro.Time(timeIntervalSinceReferenceDate: interval1).julianDays,
+            2446822.5
+        )
 
         let interval2 = date(1600, 12, 31, 0, 0, 0).timeIntervalSinceReferenceDate
-        XCTAssertEqual(SwiftAstro.Time(timeIntervalSinceReferenceDate: interval2).julianDays, 2305812.5)
-        
+        XCTAssertEqual(
+            SwiftAstro.Time(timeIntervalSinceReferenceDate: interval2).julianDays,
+            2305812.5
+        )
+
         let interval3 = date(-1000, 2, 29, 0, 0, 0).timeIntervalSinceReferenceDate
-        XCTAssertEqual(SwiftAstro.Time(timeIntervalSinceReferenceDate: interval3).julianDays, 1355866.5)
+        XCTAssertEqual(
+            SwiftAstro.Time(timeIntervalSinceReferenceDate: interval3).julianDays,
+            1355866.5
+        )
     }
     
     func testDate() throws {
@@ -75,28 +77,38 @@ final class JulianDayTests: XCTestCase {
         XCTAssertEqual(SwiftAstro.Time(julianDays: 0.0).timeIntervalSinceReferenceDate, -211845067200.0)
     }
     
-    func testEpoch() {
-        
-        XCTAssertEqual(SwiftAstro.Time.Epoch.J2000.time, SwiftAstro.Time(julianDays: 2451545.0))
-        
+    func testEpoch() throws {
+
+        XCTAssertEqual(
+            SwiftAstro.Time.Epoch.J2000.time,
+            SwiftAstro.Time(julianDays: 2451545.0)
+        )
+
     }
     
     func testJulianMilleniaSinceEpoch() throws {
-        
+
         // Example from Meeus, p. 207.
-        
+
         let jd1 = SwiftAstro.Time(julianDays: 2448976.5)
         XCTAssertEqual(jd1.julianMilleniaSinceEpoch(.J2000).to(dp: 12), -0.007032169747)
-        
-        
-        let d = date(2023, 7, 30, 12, 0, 0)
-        
-        let t = SwiftAstro.Time(julianDays: 2460156.0)
-        
-        let posn = SwiftAstro.Planet.mars.heliocentricPosition(t: t)
-        
-        print(posn)
-        
+
+    }
+
+    func testUnderConstruction() throws {
+
+        //let d = date(1987, 4, 10, 0, 0, 0)
+        //let d = date(1992, 12, 20, 0, 0, 0)
+        //let d = date(2024, 02, 10, 19, 0, 0)
+        //let d = date(2000, 1, 1, 12, 0, 0)
+
+        //let t = SwiftAstro.Time(date: d)
+        //let t = SwiftAstro.Time(julianDays: 2446895.5)
+        let t = SwiftAstro.Time(2024, 02, 10, 19, 0, 0)
+        let (lon, lat) = SwiftAstro.Planet.venus.geocentricPosition(t: t)
+
+        print(lon.rightAscension.description, lat.degreesMinutesSeconds)
+
         let distance = SwiftAstro.Distance(lightYears: 1.0)
         
         let au = distance.astronomicalUnits
@@ -129,4 +141,3 @@ final class JulianDayTests: XCTestCase {
     }
     
 }
-

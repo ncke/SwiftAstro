@@ -49,6 +49,22 @@ let posn = SwiftAstro.Planet.mars.heliocentricPosition(t: t)
 
 Gives longitude -3.0927667317253196 radians, latitude 0.023473327404147742 radians, and radius 1.6478994217781984 astronomical units (the distance between Mars and the Sun).
 
+### Geocentric position of the planets.
+Calculates the apparent geocentric position of a planet when viewed from Earth against the background of the stars.
+
+**Example:** Calculate the position of Venus on 10th February 2024 at 19:00 UTC.
+
+```Swift
+let t = SwiftAstro.Time(2024, 02, 10, 19, 0, 0)
+let (lon, lat) = SwiftAstro.Planet.venus.geocentricPosition(t: t)
+
+print(lon.rightAscension.description, lat.degreesMinutesSeconds)
+``` 
+
+Gives the planet's 'right ascension as 19h 36m 37.569s, and declination as -021° 25' 22.986".
+
+Compare with 19h 36m 39.41s and -21° 25' 21.2" computed by NASA Horizons (<https://ssd.jpl.nasa.gov/horizons/>).
+
 ## Data structures.
 
 ### Distance.

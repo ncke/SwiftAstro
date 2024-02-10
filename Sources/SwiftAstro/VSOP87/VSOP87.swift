@@ -1,10 +1,3 @@
-//
-//  VSOP87.swift
-//  
-//
-//  Created by Nick on 07/02/2023.
-//
-
 import Foundation
 
 class VSOP87Store {
@@ -170,12 +163,18 @@ extension VSOP87 {
 extension VSOP87 {
     
     func computeSum(_ tau: Double, index: Index) -> Double {
-        let sums = tables(forIndex: index).map { table in
-            computeSumTerms(table.terms, tau: tau)
-        }
-        
-        let sum = (0..<sums.count).reduce(0.0) { partial, i in
-            partial + sums[i] * pow(tau, Double(i))
+        var sum = 0.0
+
+        for table in tables(forIndex: index) {
+            let Talpha = pow(tau, Double(table.header.it))
+            var tableSum = 0.0
+
+            for term in table.terms {
+                let calc = Talpha * term.A * cos(term.B + term.C * tau)
+                tableSum += calc
+            }
+
+            sum += tableSum
         }
         
         return sum
@@ -185,17 +184,6 @@ extension VSOP87 {
         tables.filter { table in
             table.header.iv == index.iv && table.header.ic == index.ic
         }
-    }
-    
-    private func computeSumTerms(
-        _ terms: [Term],
-        tau: Double
-    ) -> Double {
-        let sumTerms: Double = terms.reduce(0.0) { partial, term in
-            partial + term.A * cos(term.B + term.C * tau)
-        }
-        
-        return sumTerms
     }
     
 }

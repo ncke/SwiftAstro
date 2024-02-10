@@ -1,10 +1,3 @@
-//
-//  Time.swift
-//  
-//
-//  Created by Nick on 09/02/2023.
-//
-
 import Foundation
 
 extension SwiftAstro {
@@ -22,9 +15,9 @@ extension SwiftAstro {
 // MARK: - Constants
 
 extension SwiftAstro.Time {
-    
+
     public static let secondsPerDay: TimeInterval = 86400.0
-    
+
     public static let jd0 = SwiftAstro.Time(julianDays: 0.0)
     
     public static let julianDaysPerMillenia = 365250.0
@@ -82,7 +75,41 @@ extension SwiftAstro.Time {
         let interval = date.timeIntervalSinceReferenceDate
         self.init(timeIntervalSinceReferenceDate: interval)
     }
-    
+
+    public init(
+        _ year: Int,
+        _ month: Int,
+        _ day: Int,
+        _ hour: Int,
+        _ minute: Int,
+        _ second: Int
+    ) {
+        let date = Self.dateFromComponents(year, month, day, hour, minute, second)
+        self.init(date: date)
+    }
+
+    private static func dateFromComponents(
+        _ year: Int,
+        _ month: Int,
+        _ day: Int,
+        _ hour: Int,
+        _ minute: Int,
+        _ second: Int
+    ) -> Date {
+        let components = DateComponents(
+            calendar: Calendar(identifier: .gregorian),
+            timeZone: TimeZone(secondsFromGMT: 0),
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second
+        )
+
+        return components.date!
+    }
+
 }
 
 // MARK: - Operators
@@ -124,7 +151,5 @@ extension SwiftAstro.Time {
     public static postfix func ...(lhs: Self) -> PartialRangeFrom<Self> {
         PartialRangeFrom(lhs)
     }
-    
-    
-}
 
+}

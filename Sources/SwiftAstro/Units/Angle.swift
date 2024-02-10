@@ -1,10 +1,3 @@
-//
-//  Angle.swift
-//  
-//
-//  Created by Nick on 09/02/2023.
-//
-
 import Foundation
 
 // MARK: - Angle
@@ -31,7 +24,7 @@ extension SwiftAstro {
 extension SwiftAstro.Angle {
         
     static let twopi = 2.0 * Double.pi
-    
+
     public var degrees: Double {
         (radians * 360.0) / Self.twopi
     }
