@@ -98,8 +98,36 @@ The 'SwiftAstro.Time` data structure represents a moment in time. The underlying
 
 Accessors and initialisers are also available for the corresponding Foundation `Date` and for the `timeIntervalSinceReferenceDate`.
 
+A convenience initialiser is provided for date/time in UTC in the Gregorian calendar: `SwiftAstro.Date(2024, 5,29, 18, 30, 0)` initialises as 29th May 2024, 18:30 UTC.
+
+#### Nutation.
+
+The `nutation` instance method returns a pair of `SwiftAstro.Angle` values. The first value represents the nutation in longitude for the instance time, the second value represents the nutation in obliquity. The method of calculation is Meeus' abridged version of the '1980 IAU Theory of Nutation' omitting small terms (see Meeus, 1991, p. 132).
+
+#### Obliquity of the ecliptic.
+
+The `meanObliquityOfTheEcliptic` instance method returns a `SwiftAstro.Angle` representing the mean obliquity of the ecliptic for the instance time. The method of calculation is due to Laskar (1986), cited in Meeus, 1991, p. 135.
+
 ### Spherical position.
-The `SphericalPosition` struct represents the relative spherical coordinates of an object in terms of longitude, latitude, and radius (distance to the origin).
+
+The `SphericalPosition` struct represents the relative spherical coordinates of an object in terms of longitude, latitude, and radius (distance to the origin). 
+
+## Physical constants.
+
+### Distances.
+`SwiftAstro.Distance.metersPerAstronomicalUnit`
+`SwiftAstro.Distance.metersPerLightYear`
+`SwiftAstro.Distance.metersPerLightMinute`
+`SwiftAstro.Distance.metersPerLightSecond`
+`SwiftAstro.Distance.astronomicalUnitsPerParsec`
+`SwiftAstro.Distance.astronomicalUnitsPerLightYear`
+
+### Durations of time.
+`SwiftAstro.Distance.lightSecondsPerLightYear`
+`SwiftAstro.Distance.lightSecondsPerAstronomicalUnit`
+
+### Angles.
+`SwiftAstro.Angle.meanObliquityOfEclipticAtJ2000`
 
 ## Sources.
 
