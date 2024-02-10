@@ -4,17 +4,12 @@ import Foundation
 
 extension SwiftAstro.Time {
 
-    /// The mean obliquity of the ecliptic in the standard equinox of J2000.
-    public static let meanObliquityOfEclipticAtJ2000 = SwiftAstro.Angle(
-        degrees: 23.43929111111111
-    )
-
     /// The mean obligquity of the ecliptic.
     /// - Note : See Equation 21.3, Meeus (1991), p. 135.
     public var meanObliquityOfEcliptic: SwiftAstro.Angle {
         let U = 0.1 * self.julianMilleniaSinceEpoch(.J2000)
 
-        let e0 = Self.meanObliquityOfEclipticAtJ2000.degrees
+        let e0 = SwiftAstro.Angle.meanObliquityOfEclipticAtJ2000.degrees
         - 4680.93 * U / 3600.0
         - 1.55 * pow(U, 2.0) / 3600.0
         + 1999.25 * pow(U, 3.0) / 3600.0

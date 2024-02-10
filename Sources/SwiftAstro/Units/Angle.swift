@@ -191,6 +191,17 @@ extension SwiftAstro.Angle {
     
 }
 
+// MARK: - Mean Obliguity Of The Ecliptic
+
+extension SwiftAstro.Angle {
+    
+    /// The mean obliquity of the ecliptic in the standard equinox of J2000.
+    public static let meanObliquityOfEclipticAtJ2000 = SwiftAstro.Angle(
+        degrees: 23.43929111111111
+    )
+
+}
+
 // MARK: - Operators
 
 extension SwiftAstro.Angle {
