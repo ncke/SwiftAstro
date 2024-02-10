@@ -1,16 +1,9 @@
-//
-//  UtilityTests.swift
-//  
-//
-//  Created by Nick on 08/02/2023.
-//
-
 import XCTest
 @testable import SwiftAstro
 
 final class UtilityTests: XCTestCase {
     
-    func testDp() {
+    func testToDp() throws {
         XCTAssertEqual(-19.8.to(dp: 0),         -20.0)
         XCTAssertEqual(-19.5.to(dp: 0),         -20.0)
         XCTAssertEqual(-19.1.to(dp: 0),         -19.0)
