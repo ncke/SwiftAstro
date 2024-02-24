@@ -15,8 +15,7 @@ public protocol HeliocentricallyPositionable {
 public protocol GeocentricallyPositionable {
 
     func geocentricPosition(
-        t: SwiftAstro.Time,
-        adjustForLightTime: Bool
+        t: SwiftAstro.Time
     ) -> (SwiftAstro.Angle, SwiftAstro.Angle)
 
 }

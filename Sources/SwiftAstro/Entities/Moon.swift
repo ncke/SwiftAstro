@@ -17,8 +17,7 @@ extension SwiftAstro.Moon {
     /// Returns the geocentric position of the moon using the method described in Chapter 45,
     /// Meeus, 1991.
     public func geocentricPosition(
-        t: SwiftAstro.Time, 
-        adjustForLightTime: Bool = true
+        t: SwiftAstro.Time
     ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
         let T = t.julianCenturiesSinceEpoch(.J2000)
         let T2 = T * T

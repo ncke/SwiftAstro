@@ -15,4 +15,17 @@ final class SunTests: XCTestCase {
         XCTAssertEqual(decl.degrees, -7.822264529738101, accuracy: 1E-12)
     }
 
+    func testReadmeExample() throws {
+        let t = SwiftAstro.Time(2024, 7, 1, 15, 0, 0)
+
+        let (raSun, declSun) = SwiftAstro.sun.geocentricPosition(t: t)
+        print(raSun.rightAscension)
+        print(declSun.degreesMinutesSeconds)
+
+        let (raMoon, declMoon) = SwiftAstro.moon.geocentricPosition(t: t)
+        print(raMoon.rightAscension)
+        print(declMoon.degreesMinutesSeconds)
+        print()
+    }
+
 }

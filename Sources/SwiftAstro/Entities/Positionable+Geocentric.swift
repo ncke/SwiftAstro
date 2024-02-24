@@ -8,14 +8,16 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
     /// pair of angles representing its apparent right ascension and declination.
     /// - Note: See Meeus (1991), p. 209
     public func geocentricPosition(
-        t: SwiftAstro.Time,
-        adjustForLightTime: Bool = true
+        t: SwiftAstro.Time
     ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
         let tActual = tAdjustedForLightTime(t: t)
         let (x, y, z) = xyz(t: tActual)
         let geoLon = SwiftAstro.Angle(radians: atan2(y, x))
         let geoLat = SwiftAstro.Angle(radians: atan2(z, sqrt(x * x + y * y)))
-        let (fk5lon, fk5lat) = toFK5(lon: geoLon, lat: geoLat, t: tActual)
+        let (fk5lon, fk5lat) = SwiftAstro.Angle.vsopToFK5(
+            lon: geoLon,
+            lat: geoLat,
+            t: tActual)
         let (dPsi, dEpsilon) = tActual.nutation
         let ecliptic = tActual.meanObliquityOfEcliptic + dEpsilon
         let (ra, decl) = SwiftAstro.Angle.asEquatorialCoordinates(
@@ -73,27 +75,6 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
         let z = R * sin(B) - R0 * sin(B0)
 
         return (x, y, z)
-    }
-
-    private func toFK5(
-        lon: SwiftAstro.Angle,
-        lat: SwiftAstro.Angle,
-        t: SwiftAstro.Time
-    ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
-        // See: Equation 31.3 at Meeus (1991), p. 207.
-        let T = t.julianCenturiesSinceEpoch(.J2000)
-        let Lmark = SwiftAstro.Angle(
-            degrees: lon.degrees - 1.397 * T - 0.00031 * (T * T)
-        )
-
-        let deltaL = (-0.09033 / 3600.0) +
-            0.03916 * (cos(Lmark) + sin(Lmark)) * tan(lat) / 3600.0
-
-        let deltaB = 0.03916 * (cos(Lmark) - sin(Lmark)) / 3600.0
-
-        return (
-            SwiftAstro.Angle(degrees: lon.degrees + deltaL),
-            SwiftAstro.Angle(degrees: lat.degrees + deltaB))
     }
 
 }

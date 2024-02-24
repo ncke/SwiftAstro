@@ -17,8 +17,7 @@ extension SwiftAstro.Sun {
     /// Computes the geocentric position of the Sun.
     /// See: Chapter 24, Solar Coordinates, in Meeus, 1991.
     public func geocentricPosition(
-        t: SwiftAstro.Time,
-        adjustForLightTime: Bool = true
+        t: SwiftAstro.Time
     ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
         let earth = SwiftAstro.Planet.earth.heliocentricPosition(t: t)
 
