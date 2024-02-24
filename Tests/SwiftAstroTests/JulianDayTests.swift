@@ -124,9 +124,10 @@ final class JulianDayTests: XCTestCase {
         }
         
         if let vega = SwiftAstro.brightStarCatalog[7001] {
+            print(vega.name)
             print(vega.visualMagnitude)
         }
-        
+
         let brightest = SwiftAstro.brightStarCatalog.stars.filter {
             star in
             

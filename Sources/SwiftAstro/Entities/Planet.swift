@@ -19,9 +19,9 @@ extension SwiftAstro {
 
 // MARK: - Data
 
-extension SwiftAstro.Planet {
+extension SwiftAstro.Planet: AstronomicallyNameable {
     
-    public var name: String {
+    public var name: String? {
         switch self {
         case .mercury: return "Mercury"
         case .venus: return "Venus"

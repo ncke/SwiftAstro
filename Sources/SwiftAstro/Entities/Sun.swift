@@ -4,7 +4,12 @@ import Foundation
 
 extension SwiftAstro {
 
-    public struct Sun : GeocentricallyPositionable {}
+    public struct Sun : 
+        GeocentricallyPositionable,
+        AstronomicallyNameable
+    {
+        public let name: String? = "Sun"
+    }
 
     public static let sun = Sun()
 

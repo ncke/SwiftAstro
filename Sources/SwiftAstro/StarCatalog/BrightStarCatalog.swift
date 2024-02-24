@@ -1,10 +1,3 @@
-//
-//  StarCatalog.swift
-//  
-//
-//  Created by Nick on 09/02/2023.
-//
-
 import Foundation
 
 // MARK: - Bright Star Catalog
@@ -71,7 +64,7 @@ private extension SwiftAstro.BrightStarCatalog {
             
             let star = SwiftAstro.BrightStar(
                 number: line.cols(1, 4)!,
-                name: line.cols(5, 10),
+                commonName: line.cols(5, 10),
                 durchmusterungIdentification: line.cols(15, 11),
                 henryDraperCatalogNumber: line.cols(26, 6),
                 saoCatalogNumber: line.cols(32, 6),

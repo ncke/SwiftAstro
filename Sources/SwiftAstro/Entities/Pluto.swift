@@ -6,8 +6,11 @@ extension SwiftAstro {
 
     public struct Pluto : 
         HeliocentricallyPositionable,
-        GeocentricallyPositionable
-    {}
+        GeocentricallyPositionable,
+        AstronomicallyNameable
+    {
+        public let name: String? = "Pluto"
+    }
 
     public static let pluto = Pluto()
 
@@ -18,7 +21,7 @@ extension SwiftAstro {
 extension SwiftAstro.Pluto {
 
     /// Computes the heliocentric position of Pluto using the method described in Chapter 36 of
-    /// Meeus (1991). 
+    /// Meeus (1991).
     /// - Note: The position is considered accurate only for the years 1885 to 2099.
     public func heliocentricPosition(
         t: SwiftAstro.Time
@@ -38,20 +41,29 @@ extension SwiftAstro.Pluto {
                 pt.aRad * sina + pt.bRad * cosa)
         }
 
-        let sums = Self.plutoTerms.reduce((0.0, 0.0, 0.0)) { partial, pt in
-            let term = term(pt)
-            return (partial.0 + term.0, partial.1 + term.1, partial.2 + term.2)
+        let (lonSum, latSum, radSum) = Self.plutoTerms.reduce((0.0, 0.0, 0.0)) {
+            partial, pt in
+
+            let (lonAcc, latAcc, radAcc) = partial
+            let (lon, lat, rad) = term(pt)
+            return (lonAcc + lon, latAcc + lat, radAcc + rad)
         }
 
-        let lon = 238.956785 + 144.96 * T + (sums.0 / 1E6)
-        let lat = -3.908202 + (sums.1 / 1E6)
-        let rad = 40.7247248 + (sums.2 / 1E7)
+        let lon = 238.956785 + 144.96 * T + (lonSum / 1E6)
+        let lat = -3.908202 + (latSum / 1E6)
+        let rad = 40.7247248 + (radSum / 1E7)
 
         return SwiftAstro.SphericalPosition(
             longitude: SwiftAstro.Angle(degrees: lon).unwound,
             latitude: SwiftAstro.Angle(degrees: lat).unwound,
             radius: SwiftAstro.Distance(astronomicalUnits: rad))
     }
+
+}
+
+// MARK: - Periodic Terms for Pluto
+
+extension SwiftAstro.Pluto {
 
     private struct PlutoTerm {
         let j: Double

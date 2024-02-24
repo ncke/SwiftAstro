@@ -4,7 +4,11 @@ import Foundation
 
 extension SwiftAstro {
 
-    public struct Moon : GeocentricallyPositionable {}
+    public struct Moon : GeocentricallyPositionable, AstronomicallyNameable {
+
+        public let name: String? = "Moon"
+
+    }
 
     public static let moon = Moon()
 
@@ -24,31 +28,40 @@ extension SwiftAstro.Moon {
         let T3 = T * T2
         let T4 = T * T3
 
-        let Ld = SwiftAstro.Angle(degrees: 218.3164591 + 481267.88134236 * T - 0.0013268 * T2 + T3 / 538841 - T4 / 65194000)
-        let D = SwiftAstro.Angle(degrees: 297.8502042 + 445267.1115168 * T - 0.0016300 * T2 + T3 / 545868 - T4 / 113065000)
-        let M = SwiftAstro.Angle(degrees: 357.5291092 + 35999.0502909 * T - 0.0001536 * T2 + T3 / 24490000)
-        let Md = SwiftAstro.Angle(degrees: 134.9634114 + 477198.8676313 * T + 0.0089970 * T2 + T3 / 69699 - T4 / 14712000)
-        let F = SwiftAstro.Angle(degrees: 93.2720993 + 483202.0175273 * T - 0.0034029 * T2 - T3 / 3526000 + T4 / 863310000)
+        let Ld = SwiftAstro.Angle(
+            degrees: 218.3164591 + 481267.88134236 * T - 0.0013268 * T2 + T3 / 538841 - T4 / 65194000)
+
+        let D = SwiftAstro.Angle(
+            degrees: 297.8502042 + 445267.1115168 * T - 0.0016300 * T2 + T3 / 545868 - T4 / 113065000)
+
+        let M = SwiftAstro.Angle(
+            degrees: 357.5291092 + 35999.0502909 * T - 0.0001536 * T2 + T3 / 24490000)
+
+        let Md = SwiftAstro.Angle(
+            degrees: 134.9634114 + 477198.8676313 * T + 0.0089970 * T2 + T3 / 69699 - T4 / 14712000)
+
+        let F = SwiftAstro.Angle(
+            degrees: 93.2720993 + 483202.0175273 * T - 0.0034029 * T2 - T3 / 3526000 + T4 / 863310000)
+
         let A1 = SwiftAstro.Angle(degrees: 119.75 + 131.849 * T)
+
         let A2 = SwiftAstro.Angle(degrees: 53.09 + 479264.290 * T)
+
         let A3 = SwiftAstro.Angle(degrees: 313.45 + 481266.484 * T)
+
         let E = 1 - 0.002516 * T - 0.0000074 * T2
+
         let E2 = E * E
 
-        func eccentricityCorrection(mt: MoonTerm) -> Double {
-            if mt.m == 1 || mt.m == -1 { return E }
-            if mt.m == 2 || mt.m == -2 { return E2 }
-            return 1.0
-        }
-
         func term(mt: MoonTerm) -> (Double, Double) {
-            let aDegrees = mt.d * D.degrees + mt.m * M.degrees + mt.mDash * Md.degrees + mt.f * F.degrees
-            let alpha = SwiftAstro.Angle(degrees: aDegrees)
-            let ec = eccentricityCorrection(mt: mt)
+            let ec = abs(mt.m) == 1 ? E : abs(mt.m) == 2 ? E2 : 1.0
+            let alpha = SwiftAstro.Angle(
+                degrees: mt.d * D.degrees
+                + mt.m * M.degrees
+                + mt.mDash * Md.degrees
+                + mt.f * F.degrees)
 
-            return (
-                ec * mt.cSin * sin(alpha),
-                ec * mt.cCos * cos(alpha))
+            return (ec * mt.cSin * sin(alpha), ec * mt.cCos * cos(alpha))
         }
 
         let lrSum = Self.lrMoonTerms.reduce((0.0, 0.0)) { partial, mt in
@@ -61,31 +74,39 @@ extension SwiftAstro.Moon {
             return partial + b
         }
 
-        let lSumAdditive = lrSum.0
-        + 3958 * sin(A1)
-        + 1962 * sin(Ld - F)
-        + 318 * sin(A2)
+        let lAdditive = SwiftAstro.Angle(
+            degrees: (lrSum.0
+                      + 3958 * sin(A1)
+                      + 1962 * sin(Ld - F)
+                      + 318 * sin(A2))
+            / 1E6)
 
-        let bSumAdditive = bSum
-        - 2235 * sin(Ld)
-        + 382 * sin(A3)
-        + 175 * sin(A1 - F)
-        + 175 * sin(A1 + F)
-        + 127 * sin(Ld - Md)
-        - 115 * sin(Ld + Md)
+        let bAdditive = SwiftAstro.Angle(
+            degrees: (bSum
+                      - 2235 * sin(Ld)
+                      + 382 * sin(A3)
+                      + 175 * sin(A1 - F)
+                      + 175 * sin(A1 + F)
+                      + 127 * sin(Ld - Md)
+                      - 115 * sin(Ld + Md))
+            / 1E6)
 
         let (dPsi, dEpsilon) = t.nutation
         let ecliptic = t.meanObliquityOfEcliptic + dEpsilon
-        let lon = SwiftAstro.Angle(degrees: Ld.degrees + lSumAdditive / 1E6 + dPsi.degrees)
-        let lat = SwiftAstro.Angle(degrees: bSumAdditive / 1E6)
 
         let (lambda, beta) = SwiftAstro.Angle.asEquatorialCoordinates(
-            lon: lon,
-            lat: lat,
+            lon: Ld + lAdditive + dPsi,
+            lat: bAdditive,
             ecliptic: ecliptic)
 
         return (lambda.unwound, beta.unwound)
     }
+
+}
+
+// MARK: - Periodic Terms for the Moon
+
+extension SwiftAstro.Moon {
 
     private struct MoonTerm {
         let d: Double

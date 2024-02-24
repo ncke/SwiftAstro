@@ -1,10 +1,3 @@
-//
-//  BrightStar.swift
-//  
-//
-//  Created by Nick on 09/02/2023.
-//
-
 import Foundation
 
 // MARK: - Bright Star
@@ -19,7 +12,7 @@ extension SwiftAstro {
         public let number: Int
         
         /// Common name of the star.
-        public let name: String?
+        public let commonName: String?
         
         /// Durchmusterung Identification.
         public let durchmusterungIdentification: String?
