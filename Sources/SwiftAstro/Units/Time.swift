@@ -41,7 +41,11 @@ extension SwiftAstro.Time {
     public func julianMilleniaSinceEpoch(_ epoch: Epoch) -> Double {
         (julianDays - epoch.time.julianDays) / Self.julianDaysPerMillenia
     }
-    
+
+    public func julianCenturiesSinceEpoch(_ epoch: Epoch) -> Double {
+        10.0 * julianMilleniaSinceEpoch(epoch)
+    }
+
 }
 
 // MARK: - Time Interval

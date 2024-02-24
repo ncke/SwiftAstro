@@ -81,13 +81,13 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
         t: SwiftAstro.Time
     ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
         // See: Equation 31.3 at Meeus (1991), p. 207.
-        let T = 10.0 * t.julianMilleniaSinceEpoch(.J2000)
+        let T = t.julianCenturiesSinceEpoch(.J2000)
         let Lmark = SwiftAstro.Angle(
             degrees: lon.degrees - 1.397 * T - 0.00031 * (T * T)
         )
 
-        let deltaL = (-0.09033 / 3600.0)
-        + 0.03916 * (cos(Lmark) + sin(Lmark)) * tan(lat) / 3600.0
+        let deltaL = (-0.09033 / 3600.0) +
+            0.03916 * (cos(Lmark) + sin(Lmark)) * tan(lat) / 3600.0
 
         let deltaB = 0.03916 * (cos(Lmark) - sin(Lmark)) / 3600.0
 

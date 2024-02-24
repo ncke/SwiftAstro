@@ -11,7 +11,7 @@ extension SwiftAstro.Time {
     private func nutationUsing1980Theory() -> (SwiftAstro.Angle, SwiftAstro.Angle) {
         // See Chapter 21, Meeus (1991).
 
-        let T = 10.0 * julianMilleniaSinceEpoch(.J2000)
+        let T = julianCenturiesSinceEpoch(.J2000)
         let T2 = T * T
         let T3 = T * T2
 
