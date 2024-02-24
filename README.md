@@ -63,7 +63,30 @@ print(lon.rightAscension.description, lat.degreesMinutesSeconds)
 
 Gives the planet's 'right ascension as 19h 36m 37.569s, and declination as -021° 25' 22.986".
 
-Compare with 19h 36m 39.41s and -21° 25' 21.2" computed by NASA Horizons (<https://ssd.jpl.nasa.gov/horizons/>).
+Compare with 19h 36m 39.41s and -21° 25' 21.2" computed by JPL Horizons (<https://ssd.jpl.nasa.gov/horizons/>).
+
+### Geocentric position of the Moon and Sun.
+Calculate the apparent geocentric position of the Moon or the Sun when viewed from Earth against the background of the stars.
+
+**Example:** Calculate the position of the Moon and Sun on 1st July 2024 at 15:00 UTC.
+
+```Swift
+let t = SwiftAstro.Time(2024, 7, 1, 15, 0, 0)
+
+let (raSun, declSun) = SwiftAstro.sun.geocentricPosition(t: t)
+print(raSun.rightAscension)            // 06h 43m 08.592s
+print(declSun.degreesMinutesSeconds)   // 023° 03' 53.911"
+
+let (raMoon, declMoon) = SwiftAstro.moon.geocentricPosition(t: t)
+print(raMoon.rightAscension)          // 02h 49m 21.979s
+print(declMoon.degreesMinutesSeconds) // 019° 14' 35.610"
+```
+For comparison JPL Horizons gives:
+- For the Sun: 6h 43m 10.49s, 23º 03' 55.0"
+- For the Moon: 2h 48m 02.59s, 19º 08' 45.1"
+
+### Pluto.
+The heliocentric and geocentric positions of Pluto are available from the `SwiftAstro.pluto` struct.
 
 ## Data structures.
 
