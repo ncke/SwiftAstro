@@ -18,7 +18,7 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
         let (fk5lon, fk5lat) = toFK5(lon: geoLon, lat: geoLat, t: tActual)
         let (dPsi, dEpsilon) = tActual.nutation
         let ecliptic = tActual.meanObliquityOfEcliptic + dEpsilon
-        let (ra, decl) = toEquatorialCoordinates(
+        let (ra, decl) = SwiftAstro.Angle.asEquatorialCoordinates(
             lon: fk5lon + dPsi,
             lat: fk5lat,
             ecliptic: ecliptic)
@@ -94,25 +94,6 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
         return (
             SwiftAstro.Angle(degrees: lon.degrees + deltaL),
             SwiftAstro.Angle(degrees: lat.degrees + deltaB))
-    }
-
-    private func toEquatorialCoordinates(
-        lon: SwiftAstro.Angle,
-        lat: SwiftAstro.Angle,
-        ecliptic: SwiftAstro.Angle
-    ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
-        let ra = atan2(
-            sin(lon) * cos(ecliptic) - tan(lat) * sin(ecliptic),
-            cos(lon)
-        )
-
-        let decl = asin(
-            sin(lat) * cos(ecliptic) + cos(lat) * sin(ecliptic) * sin(lon)
-        )
-
-        return (
-            SwiftAstro.Angle(radians: ra),
-            SwiftAstro.Angle(radians: decl))
     }
 
 }

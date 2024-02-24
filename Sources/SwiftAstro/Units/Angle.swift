@@ -297,3 +297,28 @@ public func cos(_ angle: SwiftAstro.Angle) -> Double {
 public func tan(_ angle: SwiftAstro.Angle) -> Double {
     tan(angle.radians)
 }
+
+// MARK: - Equatorial Coordinates
+
+extension SwiftAstro.Angle {
+
+    static func asEquatorialCoordinates(
+        lon: SwiftAstro.Angle,
+        lat: SwiftAstro.Angle,
+        ecliptic: SwiftAstro.Angle
+    ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
+        let ra = atan2(
+            sin(lon) * cos(ecliptic) - tan(lat) * sin(ecliptic),
+            cos(lon)
+        )
+
+        let decl = asin(
+            sin(lat) * cos(ecliptic) + cos(lat) * sin(ecliptic) * sin(lon)
+        )
+
+        return (
+            SwiftAstro.Angle(radians: ra),
+            SwiftAstro.Angle(radians: decl))
+    }
+
+}

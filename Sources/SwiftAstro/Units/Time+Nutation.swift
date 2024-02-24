@@ -15,11 +15,11 @@ extension SwiftAstro.Time {
         let T2 = T * T
         let T3 = T * T2
 
-        let D       = 297.85036 + 445267.111480 * T - 0.0019142 * T2 + T3 / 189474.0
-        let M       = 357.52772 +  35999.050340 * T - 0.0001603 * T2 + T3 / 300000.0
-        let Mmark   = 134.96298 + 477198.867398 * T + 0.0086972 * T2 + T3 /  56250.0
-        let F       =  93.27191 + 483202.017538 * T - 0.0036825 * T2 + T3 / 327270.0
-        let Omega   = 125.04452 -   1934.136261 * T + 0.0020708 * T2 + T3 / 450000.0
+        let D       = SwiftAstro.Angle(degrees: 297.85036 + 445267.111480 * T - 0.0019142 * T2 + T3 / 189474.0)
+        let M       = SwiftAstro.Angle(degrees: 357.52772 + 35999.050340 * T - 0.0001603 * T2 - T3 / 300000.0)
+        let Mmark   = SwiftAstro.Angle(degrees: 134.96298 + 477198.867398 * T + 0.0086972 * T2 + T3 / 56250.0)
+        let F       = SwiftAstro.Angle(degrees: 93.27191 + 483202.017538 * T - 0.0036825 * T2 + T3 / 327270.0)
+        let Omega   = SwiftAstro.Angle(degrees: 125.04452 - 1934.136261 * T + 0.0020708 * T2 + T3 / 450000.0)
 
         var dPsi = 0.0
         var dEpsilon = 0.0
@@ -34,10 +34,9 @@ extension SwiftAstro.Time {
                 Mmark: Mmark,
                 F: F,
                 Omega: Omega)
-            let argRads = Double.pi * arg / 180.0
 
-            dPsi += s * sin(argRads)
-            dEpsilon += c * cos(argRads)
+            dPsi += s * sin(arg)
+            dEpsilon += c * cos(arg)
         }
 
         return (
@@ -48,15 +47,15 @@ extension SwiftAstro.Time {
 
     private static func nutationArgument(
         n: Int,
-        D: Double,
-        M: Double,
-        Mmark: Double,
-        F: Double,
-        Omega: Double
-    ) -> Double {
+        D: SwiftAstro.Angle,
+        M: SwiftAstro.Angle,
+        Mmark: SwiftAstro.Angle,
+        F: SwiftAstro.Angle,
+        Omega: SwiftAstro.Angle
+    ) -> SwiftAstro.Angle {
         let (m, _, _) = Self.nutationTheory[n]
-
-        return m[0] * D + m[1] * M + m[2] * Mmark + m[3] * F + m[4] * Omega
+        let arg = m[0] * D.degrees + m[1] * M.degrees + m[2] * Mmark.degrees + m[3] * F.degrees + m[4] * Omega.degrees
+        return SwiftAstro.Angle(degrees: arg)
     }
 
     private static func nutationSineCoefficient(n: Int, T: Double) -> Double {
