@@ -283,3 +283,17 @@ extension SwiftAstro.Angle {
     }
     
 }
+
+// MARK: - Trigonometric Functions
+
+public func sin(_ angle: SwiftAstro.Angle) -> Double {
+    sin(angle.radians)
+}
+
+public func cos(_ angle: SwiftAstro.Angle) -> Double {
+    cos(angle.radians)
+}
+
+public func tan(_ angle: SwiftAstro.Angle) -> Double {
+    tan(angle.radians)
+}

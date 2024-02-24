@@ -17,6 +17,8 @@ extension SwiftAstro {
         public var description: String {
             return "\(astronomicalUnits) au"
         }
+
+        public static let zero = Distance(astronomicalUnits: 0.0)
     }
     
 }
@@ -61,7 +63,23 @@ extension SwiftAstro.Distance {
     public init(lightYears: Double) {
         astronomicalUnits = lightYears * Self.astronomicalUnitsPerLightYear
     }
-    
+
+    public var lightDays: Double {
+        lightSeconds / SwiftAstro.Time.secondsPerDay
+    }
+
+    public init(lightDays: Double) {
+        self.init(lightSeconds: lightDays * SwiftAstro.Time.secondsPerDay)
+    }
+
+    public var lightMinutes: Double {
+        lightSeconds / 60.0
+    }
+
+    public init(lightMinutes: Double) {
+        self.init(lightSeconds: 60.0 * lightMinutes)
+    }
+
     public var lightSeconds: Double {
         astronomicalUnits * Self.lightSecondsPerAstronomicalUnit
     }
@@ -69,14 +87,7 @@ extension SwiftAstro.Distance {
     public init(lightSeconds: Double) {
         astronomicalUnits = lightSeconds / Self.lightSecondsPerAstronomicalUnit
     }
-    
-    public var lightMinutes: Double {
-        lightSeconds / 60.0
-    }
-    
-    public init(lightMinutes: Double) {
-        self.init(lightSeconds: 60.0 * lightMinutes)
-    }
+
 }
 
 // MARK: - Parsecs
