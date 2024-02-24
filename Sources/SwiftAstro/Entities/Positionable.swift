@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Heliocentrically Positionable
 
-protocol HeliocentricallyPositionable {
+public protocol HeliocentricallyPositionable {
 
     func heliocentricPosition(
         t: SwiftAstro.Time
@@ -12,7 +12,7 @@ protocol HeliocentricallyPositionable {
 
 // MARK: - Geocentrically Positionable
 
-protocol GeocentricallyPositionable {
+public protocol GeocentricallyPositionable {
 
     func geocentricPosition(
         t: SwiftAstro.Time,

@@ -7,7 +7,7 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
     /// Returns the geocentric position of a heliocentrically positionable body at the given time as a
     /// pair of angles representing its apparent right ascension and declination.
     /// - Note: See Meeus (1991), p. 209
-    func geocentricPosition(
+    public func geocentricPosition(
         t: SwiftAstro.Time,
         adjustForLightTime: Bool = true
     ) -> (SwiftAstro.Angle, SwiftAstro.Angle) {
