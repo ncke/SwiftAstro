@@ -4,7 +4,7 @@ import Foundation
 
 extension SwiftAstro {
     
-    public enum Planet: Equatable, Hashable, CaseIterable {
+    public enum Planet: Equatable, Hashable, CaseIterable, SolarOrbiting {
         case mercury
         case venus
         case earth
@@ -19,8 +19,8 @@ extension SwiftAstro {
 
 // MARK: - Data
 
-extension SwiftAstro.Planet: AstronomicallyNameable {
-    
+extension SwiftAstro.Planet: SwiftAstro.AstronomicallyNameable {
+
     public var name: String? {
         switch self {
         case .mercury: return "Mercury"
@@ -38,7 +38,7 @@ extension SwiftAstro.Planet: AstronomicallyNameable {
 
 // MARK: - Heliocentric Position
 
-extension SwiftAstro.Planet: HeliocentricallyPositionable {
+extension SwiftAstro.Planet: SwiftAstro.HeliocentricallyPositionable {
 
     public func heliocentricPosition(
         t: SwiftAstro.Time
@@ -60,4 +60,4 @@ extension SwiftAstro.Planet: HeliocentricallyPositionable {
 
 // MARK: - Geocentric Position
 
-extension SwiftAstro.Planet: GeocentricallyPositionable {}
+extension SwiftAstro.Planet: SwiftAstro.GeocentricallyPositionable {}

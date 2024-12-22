@@ -130,10 +130,10 @@ extension SwiftAstro {
         // MARK: - 2000 Ephemeris
         
         /// Right ascension, equinox B2000, epoch 2000.0.
-        public let rightAscension: SwiftAstro.Angle?
+        public let rightAscension: SwiftAstro.Angle
         
         /// Declination, equinox B2000, epoch 2000.0.
-        public let declination: SwiftAstro.Angle?
+        public let declination: SwiftAstro.Angle
         
         // MARK: - Galactic Lat Long
         
@@ -245,18 +245,13 @@ extension SwiftAstro {
         }
         
         public var annualMotion: AnnualMotion? {
-            guard
-                let ra = raAnnualMotion,
-                let dec = decAnnualMotion
-            else {
-                return nil
-            }
-            
-            return AnnualMotion(rightAscension: ra, declination: dec)
+            AnnualMotion(
+                rightAscension: raAnnualMotion,
+                declination: decAnnualMotion)
         }
         
-        let raAnnualMotion: SwiftAstro.Angle?
-        let decAnnualMotion: SwiftAstro.Angle?
+        let raAnnualMotion: SwiftAstro.Angle
+        let decAnnualMotion: SwiftAstro.Angle
         
         // MARK: - Parallax
         

@@ -1,6 +1,8 @@
 import Foundation
 
-extension SwiftAstro.BrightStar : AstronomicallyNameable {
+// MARK: - Nameable
+
+extension SwiftAstro.BrightStar : SwiftAstro.AstronomicallyNameable {
 
     public var name: String? {
         namedInNotes ?? commonlyNamed

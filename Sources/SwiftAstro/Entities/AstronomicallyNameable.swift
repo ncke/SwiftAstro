@@ -1,7 +1,11 @@
 import Foundation
 
-public protocol AstronomicallyNameable {
-
-    var name: String? { get }
-
+extension SwiftAstro {
+    
+    public protocol AstronomicallyNameable {
+        
+        var name: String? { get }
+        
+    }
+    
 }

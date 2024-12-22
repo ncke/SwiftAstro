@@ -1,11 +1,22 @@
 import Foundation
 
+// MARK: - Solar Orbiting
+
+extension SwiftAstro {
+
+    public protocol SolarOrbiting {}
+
+}
+
 // MARK: - Geocentric Position of a Heliocentrically Positionable Body
 
-extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
-
-    /// Returns the geocentric position of a heliocentrically positionable body at the given time as a
-    /// pair of angles representing its apparent right ascension and declination.
+extension SwiftAstro.GeocentricallyPositionable where
+    Self: SwiftAstro.SolarOrbiting,
+    Self: SwiftAstro.HeliocentricallyPositionable
+{
+    /// Returns the geocentric position of a heliocentrically positionable
+    /// body at the given time as a pair of angles representing its apparent
+    /// right ascension and declination.
     /// - Note: See Meeus (1991), p. 209
     public func geocentricPosition(
         t: SwiftAstro.Time
@@ -37,11 +48,14 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
 
         var previous = SwiftAstro.Distance.zero
         var tActual = SwiftAstro.Time(julianDays: t.julianDays)
+
         for _ in (1...maximumIterationsForLightTime) {
             let (x, y, z) = xyz(t: tActual)
             let distance = sqrt(x * x + y * y + z * z)
             let separation = SwiftAstro.Distance(astronomicalUnits: distance)
-            tActual = SwiftAstro.Time(julianDays: t.julianDays - separation.lightDays)
+            tActual = SwiftAstro.Time(
+                julianDays: t.julianDays - separation.lightDays
+            )
 
             let difference = (separation - previous).lightSeconds
             if abs(difference) < lightTimeAccuracyThreshold {
@@ -57,7 +71,7 @@ extension GeocentricallyPositionable where Self: HeliocentricallyPositionable {
     private func xyz(t: SwiftAstro.Time) -> (Double, Double, Double) {
 
         func RBL(
-            _ body: HeliocentricallyPositionable
+            _ body: SwiftAstro.HeliocentricallyPositionable
         ) -> (Double, Double, Double) {
             let heliocentric = body.heliocentricPosition(t: t)
 

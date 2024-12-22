@@ -21,7 +21,9 @@ extension SwiftAstro.Time {
     public static let jd0 = SwiftAstro.Time(julianDays: 0.0)
     
     public static let julianDaysPerMillenia = 365250.0
-    
+
+    public static let julianDaysPerYear = 365.25
+
     public enum Epoch {
         case J2000
         
@@ -44,6 +46,10 @@ extension SwiftAstro.Time {
 
     public func julianCenturiesSinceEpoch(_ epoch: Epoch) -> Double {
         10.0 * julianMilleniaSinceEpoch(epoch)
+    }
+
+    public func julianYearsSinceEpoch(_ epoch: Epoch) -> Double {
+        (julianDays - epoch.time.julianDays) / Self.julianDaysPerYear
     }
 
 }

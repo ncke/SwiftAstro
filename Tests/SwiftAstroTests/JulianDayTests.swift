@@ -115,12 +115,9 @@ final class JulianDayTests: XCTestCase {
         
         let pc = distance.parsecs
         
-        if  let sirius = SwiftAstro.brightStarCatalog[2491],
-            let ra = sirius.rightAscension?.rightAscension,
-            let dec = sirius.declination?.degreesMinutesSeconds
-        {
-            print (ra)
-            print (dec)
+        if  let sirius = SwiftAstro.brightStarCatalog[2491] {
+            print (sirius.rightAscension.rightAscension)
+            print (sirius.declination.degreesMinutesSeconds)
         }
         
         if let vega = SwiftAstro.brightStarCatalog[7001] {

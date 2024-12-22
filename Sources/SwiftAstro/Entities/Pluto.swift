@@ -7,7 +7,8 @@ extension SwiftAstro {
     public struct Pluto : 
         HeliocentricallyPositionable,
         GeocentricallyPositionable,
-        AstronomicallyNameable
+        AstronomicallyNameable,
+        SolarOrbiting
     {
         public let name: String? = "Pluto"
     }

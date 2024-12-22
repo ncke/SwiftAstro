@@ -44,10 +44,23 @@ private extension SwiftAstro.BrightStarCatalog {
         var catalog = [SwiftAstro.BrightStar]()
         
         for line in lines {
-            
+            guard
+                let rightAscension = parseRightAscension(line, offset: 76),
+                let declination = parseDeclination(line, offset: 84)
+            else {
+                // Exclude items in the catalog for which no position is
+                // given (novae, now extinct). Numbers 92, 95, 182, 1057, 1841,
+                // 2472, 2496, 3515, 3671, 6309, 6515, 7189, 7539, 8296.
+                continue
+            }
+
             let (glon, glat) = parseGalactics(line)
+
             let (raMotion, decMotion) = parseAnnualMotion(line)
-            
+            guard let raMotion = raMotion, let decMotion = decMotion else {
+                continue
+            }
+
             let parallax: SwiftAstro.Angle?
             if let arcs: Double = line.cols(162, 5) {
                 parallax = SwiftAstro.Angle(arcSeconds: arcs)
@@ -61,7 +74,7 @@ private extension SwiftAstro.BrightStarCatalog {
             } else {
                 componentsSeparation = nil
             }
-            
+
             let star = SwiftAstro.BrightStar(
                 number: line.cols(1, 4)!,
                 commonName: line.cols(5, 10),
@@ -77,8 +90,8 @@ private extension SwiftAstro.BrightStarCatalog {
                 variableStarIdentification: line.cols(52, 9),
                 rightAscension1900: parseRightAscension(line, offset: 61),
                 declination1900: parseDeclination(line, offset: 69),
-                rightAscension: parseRightAscension(line, offset: 76),
-                declination: parseDeclination(line, offset: 84),
+                rightAscension: rightAscension,
+                declination: declination,
                 galacticLongitude: glon,
                 galacticLatitude: glat,
                 visualMagnitude: line.cols(103, 5),
