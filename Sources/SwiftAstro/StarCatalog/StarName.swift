@@ -34,32 +34,6 @@ extension SwiftAstro {
         public let dateApproved: String
         public let hrNumber: Int?
         public let hdNumber: Int?
-
-        public init(
-            name: String,
-            designations: [Designation],
-            bayerGreek: String?,
-            constellation: String,
-            magnitude: Double,
-            band: Band,
-            rightAscension: Double,
-            declination: Double,
-            dateApproved: String,
-            hrNumber: Int?,
-            hdNumber: Int?
-        ) {
-            self.name = name
-            self.designations = designations
-            self.bayerGreek = bayerGreek
-            self.constellation = constellation
-            self.magnitude = magnitude
-            self.band = band
-            self.rightAscension = rightAscension
-            self.declination = declination
-            self.dateApproved = dateApproved
-            self.hrNumber = hrNumber
-            self.hdNumber = hdNumber
-        }
     }
 
 }

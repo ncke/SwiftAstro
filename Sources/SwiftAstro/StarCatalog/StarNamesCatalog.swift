@@ -9,7 +9,7 @@ extension SwiftAstro {
         private let hdIndex: [Int: Int] // HD Number to array index.
         private let hrIndex: [Int: Int] // HR Number to array index.
 
-        init() {
+        public init() {
             let parsedNames = Self.parseStarNames()
             self.names = parsedNames
 
