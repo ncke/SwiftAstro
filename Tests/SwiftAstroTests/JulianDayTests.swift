@@ -124,16 +124,6 @@ final class JulianDayTests: XCTestCase {
             print(vega.name)
             print(vega.visualMagnitude)
         }
-
-        let brightest = SwiftAstro.brightStarCatalog.stars.filter {
-            star in
-            
-            guard let magnitude = star.visualMagnitude else {
-                return false
-            }
-            
-            return magnitude <= 1.0
-        }
         
         
     }

@@ -6,7 +6,7 @@ extension SwiftAstro {
     
     public struct BrightStarCatalog {
         
-        public let stars: [SwiftAstro.BrightStar]
+        public let stars: [Int: SwiftAstro.BrightStar]
         let notes: [Int: [SwiftAstro.BrightStar.Note]]
         
         init() {
@@ -15,12 +15,7 @@ extension SwiftAstro {
         }
         
         public subscript(number: Int) -> SwiftAstro.BrightStar? {
-            let idx = number - 1
-            guard idx >= 0, idx < stars.count else {
-                return nil
-            }
-            
-            return stars[idx]
+            stars[number]
         }
         
         public func notes(number: Int) -> [SwiftAstro.BrightStar.Note]? {
@@ -35,14 +30,14 @@ extension SwiftAstro {
 
 private extension SwiftAstro.BrightStarCatalog {
     
-    static func parseStarCatalog() -> [SwiftAstro.BrightStar] {
+    static func parseStarCatalog() -> [Int: SwiftAstro.BrightStar] {
         let lines = try! Utility.stringsForResource(
             "yale-bright-star-catalog",
             withExtension: "txt"
         )
         
-        var catalog = [SwiftAstro.BrightStar]()
-        
+        var catalog = [Int: SwiftAstro.BrightStar](minimumCapacity: lines.count)
+
         for line in lines {
             guard
                 let rightAscension = parseRightAscension(line, offset: 76),
@@ -61,6 +56,8 @@ private extension SwiftAstro.BrightStarCatalog {
                 continue
             }
 
+            guard let number: Int = line.cols(1, 4) else { continue }
+
             let parallax: SwiftAstro.Angle?
             if let arcs: Double = line.cols(162, 5) {
                 parallax = SwiftAstro.Angle(arcSeconds: arcs)
@@ -76,7 +73,7 @@ private extension SwiftAstro.BrightStarCatalog {
             }
 
             let star = SwiftAstro.BrightStar(
-                number: line.cols(1, 4)!,
+                number: number,
                 commonName: line.cols(5, 10),
                 durchmusterungIdentification: line.cols(15, 11),
                 henryDraperCatalogNumber: line.cols(26, 6),
@@ -121,7 +118,7 @@ private extension SwiftAstro.BrightStarCatalog {
                 hasNote: line.cols(197, 1) == "*" ? true : false
             )
             
-            catalog.append(star)
+            catalog[number] = star
         }
         
         return catalog
