@@ -42,49 +42,49 @@ extension SwiftAstro {
 
 extension SwiftAstro.StarName {
 
-    var hipNumber: Int? {
+    public var hipNumber: Int? {
         for designation in self.designations {
             if case .hip(let n) = designation { return n }
         }
         return nil
     }
 
-    var gjNumber: Int? {
+    public var gjNumber: Int? {
         for designation in self.designations {
             if case .gj(let n) = designation { return n }
         }
         return nil
     }
 
-    var otherDesignation: String? {
+    public var otherDesignation: String? {
         for designation in self.designations {
             if case .other(let s) = designation { return s }
         }
         return nil
     }
 
-    var wdsNumber: (wds: String, component: String?)? {
+    public var wdsNumber: (wds: String, component: String?)? {
         for designation in self.designations {
             if case .wds(let s, let c) = designation { return (s, c) }
         }
         return nil
     }
 
-    var flamsteedNumber: Int? {
+    public var flamsteedNumber: Int? {
         for designation in self.designations {
             if case .flamsteed(let n) = designation { return n }
         }
         return nil
     }
 
-    var variableNumber: Int? {
+    public var variableNumber: Int? {
         for designation in self.designations {
             if case .variable(let n) = designation { return n }
         }
         return nil
     }
 
-    var simbadGreek: String? {
+    public var simbadGreek: String? {
         for designation in self.designations {
             if case .simbadGreek(let s) = designation { return s }
         }

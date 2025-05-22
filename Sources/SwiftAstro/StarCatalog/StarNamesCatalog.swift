@@ -34,17 +34,17 @@ extension SwiftAstro {
             return lookup
         }
 
-        func findByHRNumber(_ number: Int) -> StarName? {
+        public func findByHRNumber(_ number: Int) -> StarName? {
             guard let idx = hrIndex[number] else { return nil }
             return names[idx]
         }
 
-        func findByHDNumber(_ number: Int) -> StarName? {
+        public func findByHDNumber(_ number: Int) -> StarName? {
             guard let idx = hdIndex[number] else { return nil }
             return names[idx]
         }
 
-        func findByName(_ name: String) -> StarName? {
+        public func findByName(_ name: String) -> StarName? {
             let capName = name.capitalized
             guard let starName = names.first(where: { starName in
                 starName.name == capName
