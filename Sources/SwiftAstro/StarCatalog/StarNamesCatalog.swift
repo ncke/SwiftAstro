@@ -106,8 +106,15 @@ private extension SwiftAstro.StarNamesCatalog {
         }
 
         var bayerGreek: String?
-        if let greek: String = line.cols(56, 5), greek != "_" {
-            bayerGreek = greek
+        if  let greek: String = line.cols(56, 5),
+            greek != "_",
+            greek.cols(1, 1) != "V"
+        {
+            if let flamsteed = Int(greek) {
+                designations.append(.flamsteed(number: flamsteed))
+            } else {
+                bayerGreek = greek
+            }
         }
 
         if let hip: String = line.cols(91, 6), let number = Int(hip) {

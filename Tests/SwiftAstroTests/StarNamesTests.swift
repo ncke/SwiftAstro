@@ -52,4 +52,22 @@ final class StarNamesCatalogTests: XCTestCase {
         XCTAssertNil(wds?.component)
     }
 
+    func testStarNamesMerope() throws {
+        let snc = SwiftAstro.StarNamesCatalog()
+        let merope = try XCTUnwrap(snc.findByName("Merope"))
+
+        XCTAssertEqual(merope.name, "Merope")
+        XCTAssertNil(merope.bayerGreek)
+        XCTAssertEqual(merope.flamsteedNumber, 23)
+    }
+
+    func testStarNamesPhoenicia() throws {
+        let snc = SwiftAstro.StarNamesCatalog()
+        let phoenicia = try XCTUnwrap(snc.findByName("Phoenicia"))
+
+        XCTAssertEqual(phoenicia.name, "Phoenicia")
+        XCTAssertNil(phoenicia.bayerGreek)
+        XCTAssertEqual(phoenicia.variableNumber, 1703)
+    }
+
 }
