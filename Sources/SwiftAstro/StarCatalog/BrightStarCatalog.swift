@@ -72,9 +72,25 @@ private extension SwiftAstro.BrightStarCatalog {
                 componentsSeparation = nil
             }
 
+            let flamsteedNumber: Int?
+            if let flamsteed: Int = line.cols(6, 2) {
+                flamsteedNumber = flamsteed
+            } else {
+                flamsteedNumber = nil
+            }
+
+            let bayerGreek: SwiftAstro.Greek?
+            if let greek: String = line.cols(8, 4) {
+                bayerGreek = SwiftAstro.Greek(hrCoding: greek)
+            } else {
+                bayerGreek = nil
+            }
+
             let star = SwiftAstro.BrightStar(
                 number: number,
-                commonName: line.cols(5, 10),
+                flamsteedNumber: flamsteedNumber,
+                bayerGreek: bayerGreek,
+                constellation: line.cols(12, 3),
                 durchmusterungIdentification: line.cols(15, 11),
                 henryDraperCatalogNumber: line.cols(26, 6),
                 saoCatalogNumber: line.cols(32, 6),

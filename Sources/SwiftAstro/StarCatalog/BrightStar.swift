@@ -11,9 +11,15 @@ extension SwiftAstro {
         /// Harvard Revised Star Number (Bright Star Number).
         public let number: Int
         
-        /// Common name of the star.
-        public let commonName: String?
-        
+        /// Flamsteed number of the star.
+        public let flamsteedNumber: Int?
+
+        /// Bayer greek designation of the star.
+        public let bayerGreek: Greek?
+
+        /// Constellation genitive of the star.
+        public let constellation: String?
+
         /// Durchmusterung Identification.
         public let durchmusterungIdentification: String?
         
